@@ -1,7 +1,7 @@
-from splinter import Browser
 from bs4 import BeautifulSoup as soup
-import pandas as pd
 import datetime as dt
+from splinter import Browser
+import pandas as pd
 from webdriver_manager.chrome import ChromeDriverManager
 
 def scrape_all():
@@ -21,7 +21,7 @@ def scrape_all():
     return data
 
 def mars_news(browser):
-    url = 'https://data-class-mars.s3.amazonaws.com/Mars/index.html'
+    url = 'https://redplanetscience.com'
     browser.visit(url)
     browser.is_element_present_by_css('div.list_text', wait_time=1)
     html = browser.html
@@ -35,7 +35,7 @@ def mars_news(browser):
     return news_title, news_p
 
 def featured_image(browser):
-    url = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
+    url = 'https://spaceimages-mars.com/'
     browser.visit(url)
     full_image_elem = browser.find_by_tag('button')[1]
     full_image_elem.click()
@@ -45,13 +45,12 @@ def featured_image(browser):
         img_url_rel = img_soup.find('img', class_='fancybox-image').get('src')
     except AttributeError:
         return None
-    img_url = f'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/{img_url_rel}'
+    img_url = f'https://spaceimages-mars.com/{img_url_rel}'
     return img_url
 
 def mars_facts():
     try:
-        df = pd.read_html(
-            'https://data-class-mars-facts.s3.amazonaws.com/Mars_Facts/index.html')[0]
+        df = pd.read_html('https://galaxyfacts-mars.com')[0]
     except BaseException:
         return None
     df.columns = ['Description', 'Mars', 'Earth']
